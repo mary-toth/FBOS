@@ -2,6 +2,9 @@
 using FirstBankOfSuncoastNew.Models;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
+using CsvHelper;
+using System.Globalization;
 
 namespace FirstBankOfSuncoast
 {
@@ -20,24 +23,24 @@ namespace FirstBankOfSuncoast
             Console.WriteLine(new string('*', 34));
             Console.WriteLine("");
         }
-        public int TotalCheckingBalance(List<Transaction> transactions)
-        {
-            var allTransactionsChecking = transactions.Where(transaction => transaction.Account == "checking");
-            var allDepositsChecking = allTransactionsChecking.Where(deposit => deposit.Type == "deposit").Sum(deposit => deposit.Amount);
-            var allWithdrawalsChecking = allTransactionsChecking.Where(withdraw => withdraw.Type == "withdraw").Sum(withdraw => withdraw.Amount);
-            // var totalCheckingsBalance = allDepositsChecking - allWithdrawalsChecking;
+        // public int TotalCheckingBalance(List<Transaction> transactions)
+        // {
+        //     var allTransactionsChecking = transactions.Where(transaction => transaction.Account == "checking");
+        //     var allDepositsChecking = allTransactionsChecking.Where(deposit => deposit.Type == "deposit").Sum(deposit => deposit.Amount);
+        //     var allWithdrawalsChecking = allTransactionsChecking.Where(withdraw => withdraw.Type == "withdraw").Sum(withdraw => withdraw.Amount);
+        //     // var totalCheckingsBalance = allDepositsChecking - allWithdrawalsChecking;
 
-            return allDepositsChecking - allWithdrawalsChecking;
-        }
-        public int TotalSavingsBalance(List<Transaction> transactions)
-        {
-            var allTransactionsSavings = transactions.Where(transaction => transaction.Account == "savings");
-            var allDepositsSavings = allTransactionsSavings.Where(deposit => deposit.Type == "deposit").Sum(deposit => deposit.Amount);
-            var allWithdrawalsSavings = allTransactionsSavings.Where(withdraw => withdraw.Type == "withdraw").Sum(withdraw => withdraw.Amount);
-            var totalSavingsBalance = allDepositsSavings - allWithdrawalsSavings;
+        //     return allDepositsChecking - allWithdrawalsChecking;
+        // }
+        // public int TotalSavingsBalance(List<Transaction> transactions)
+        // {
+        //     var allTransactionsSavings = transactions.Where(transaction => transaction.Account == "savings");
+        //     var allDepositsSavings = allTransactionsSavings.Where(deposit => deposit.Type == "deposit").Sum(deposit => deposit.Amount);
+        //     var allWithdrawalsSavings = allTransactionsSavings.Where(withdraw => withdraw.Type == "withdraw").Sum(withdraw => withdraw.Amount);
+        //     var totalSavingsBalance = allDepositsSavings - allWithdrawalsSavings;
 
-            return totalSavingsBalance;
-        }
+        //     return totalSavingsBalance;
+        // }
 
         static void Main(string[] args)
         {
@@ -76,9 +79,9 @@ namespace FirstBankOfSuncoast
                         Console.WriteLine("How much would you like to deposit into checking?");
                         newDeposit.Amount = int.Parse(Console.ReadLine());
 
-                        if (newDeposit.Amount < 0)
+                        if (newDeposit.Amount <= 0)
                         {
-                            Console.WriteLine("You cannot enter a negative number.");
+                            Console.WriteLine("Sorry, you cannot deposit that amount.");
                         }
                         newDeposit.Account = "checking";
                         newDeposit.Type = "deposit";
@@ -99,18 +102,19 @@ namespace FirstBankOfSuncoast
                         Console.WriteLine("How much would you like to withdraw from checking?");
                         newWithdraw.Amount = int.Parse(Console.ReadLine());
 
-                        if (newWithdraw.Amount < 0)
+                        if (newWithdraw.Amount <= 0)
                         {
-                            Console.WriteLine("You cannot enter a negative number.");
+                            Console.WriteLine("Sorry, you cannot deposit that amount.");
                         }
                         newWithdraw.Account = "checking";
                         newWithdraw.Type = "withdraw";
 
                         if (newWithdraw.Amount > 0)
+                        {
                             transactions.Add(newWithdraw);
 
-                        Console.WriteLine($"You've withdrawn {newWithdraw.Amount} from  your checking account.");
-
+                            Console.WriteLine($"You've withdrawn {newWithdraw.Amount} from  your checking account.");
+                        }
                         //Your withdrawal cannot be greater than your checking balance
                         // totalCheckingBalance
 
@@ -130,9 +134,9 @@ namespace FirstBankOfSuncoast
                         Console.WriteLine("How much would you like to deposit into savings?");
                         newSavingsDeposit.Amount = int.Parse(Console.ReadLine());
 
-                        if (newSavingsDeposit.Amount < 0)
+                        if (newSavingsDeposit.Amount <= 0)
                         {
-                            Console.WriteLine("You cannot enter a negative number.");
+                            Console.WriteLine("Sorry, you cannot deposit that amount.");
                         }
                         newSavingsDeposit.Account = "savings";
                         newSavingsDeposit.Type = "deposit";
@@ -152,17 +156,19 @@ namespace FirstBankOfSuncoast
                         Console.WriteLine("How much would you like to withdraw from savings?");
                         newSavingsWithdraw.Amount = int.Parse(Console.ReadLine());
 
-                        if (newSavingsWithdraw.Amount < 0)
+                        if (newSavingsWithdraw.Amount <= 0)
                         {
-                            Console.WriteLine("You cannot enter a negative number.");
+                            Console.WriteLine("Sorry, you cannot withdraw that amount.");
                         }
                         newSavingsWithdraw.Account = "savings";
                         newSavingsWithdraw.Type = "withdraw";
 
                         if (newSavingsWithdraw.Amount > 0)
+                        {
                             transactions.Add(newSavingsWithdraw);
 
-                        Console.WriteLine($"You've withdrawn {newSavingsWithdraw.Amount} from your savings account.");
+                            Console.WriteLine($"You've withdrawn {newSavingsWithdraw.Amount} from your savings account.");
+                        }
                     }
                 }
 
@@ -173,27 +179,33 @@ namespace FirstBankOfSuncoast
                     // a. show total balance of checking
 
 
-                    // var allTransactionsChecking = transactions.Where(transaction => transaction.Account == "checking");
-                    // var allDepositsChecking = allTransactionsChecking.Where(deposit => deposit.Type == "deposit").Sum(deposit => deposit.Amount);
-                    // var allWithdrawalsChecking = allTransactionsChecking.Where(withdraw => withdraw.Type == "withdraw").Sum(withdraw => withdraw.Amount);
+                    var allTransactionsChecking = transactions.Where(transaction => transaction.Account == "checking");
+                    var allDepositsChecking = allTransactionsChecking.Where(deposit => deposit.Type == "deposit").Sum(deposit => deposit.Amount);
+                    var allWithdrawalsChecking = allTransactionsChecking.Where(withdraw => withdraw.Type == "withdraw").Sum(withdraw => withdraw.Amount);
 
-                    // var totalCheckingsBalance = allDepositsChecking - allWithdrawalsChecking;
-                    // Console.WriteLine($"Checking Balance: {totalCheckingsBalance}");
+                    var totalCheckingsBalance = allDepositsChecking - allWithdrawalsChecking;
+                    Console.WriteLine($"Checking Balance: {totalCheckingsBalance}");
 
                     // // b. show total balance of savings
 
-                    // var allTransactionsSavings = transactions.Where(transaction => transaction.Account == "savings");
-                    // var allDepositsSavings = allTransactionsSavings.Where(deposit => deposit.Type == "deposit").Sum(deposit => deposit.Amount);
-                    // var allWithdrawalsSavings = allTransactionsSavings.Where(withdraw => withdraw.Type == "withdraw").Sum(withdraw => withdraw.Amount);
+                    var allTransactionsSavings = transactions.Where(transaction => transaction.Account == "savings");
+                    var allDepositsSavings = allTransactionsSavings.Where(deposit => deposit.Type == "deposit").Sum(deposit => deposit.Amount);
+                    var allWithdrawalsSavings = allTransactionsSavings.Where(withdraw => withdraw.Type == "withdraw").Sum(withdraw => withdraw.Amount);
 
-                    // var totalSavingsBalance = allDepositsSavings - allWithdrawalsSavings;
-                    // Console.WriteLine($"Savings Balance: {totalSavingsBalance}");
+                    var totalSavingsBalance = allDepositsSavings - allWithdrawalsSavings;
+                    Console.WriteLine($"Savings Balance: {totalSavingsBalance}");
 
                 }
 
 
             }
+            //makes transactions appear in transactions CSV file
+            var fileWriter = new StreamWriter("transactions.csv");
+            var csvWriter = new CsvWriter(fileWriter, CultureInfo.InvariantCulture);
 
+            csvWriter.WriteRecords(transactions);
+
+            fileWriter.Close();
         }
     }
 }
