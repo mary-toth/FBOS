@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using CsvHelper;
 using System.Globalization;
+using CsvHelper.Configuration;
 
 namespace FirstBankOfSuncoast
 {
@@ -45,6 +46,15 @@ namespace FirstBankOfSuncoast
         static void Main(string[] args)
         {
             WelcomeMessage();
+
+            var fileReader = new StreamReader("transactions.csv");
+
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = false,
+            };
+
+            var csvReader = new CsvReader(fileReader, config);
 
             var transactions = new List<Transaction>();
 
