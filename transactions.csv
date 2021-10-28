@@ -1,2 +1,4 @@
 Account,Amount,Type,TimeStamp
-savings,100,deposit,04/26/2021 12:22:07
+checking,10,deposit,10/28/2021 16:55:48
+savings,20,deposit,10/28/2021 16:55:56
+checking,10,withdraw,10/28/2021 16:56:05

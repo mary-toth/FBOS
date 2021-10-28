@@ -44,21 +44,13 @@ namespace FirstBankOfSuncoastNew
             Console.WriteLine(new string('*', 34));
             Console.WriteLine("");
         }
-        // static public int ComputeBalance(List<Transaction> transactionsForBalancing, string accountTypeToBalance)
-        // {
-        //     var balanceFilteredTransactions = transactionsForBalancing.Where(transaction => transaction.Amount == accountTypeToBalance);
-
-        //     var balance = balanceFilteredTransactions.Where(transaction => transaction.Type == "deposit").Sum(transaction => transaction.Amount) -
-        //                     balanceFilteredTransactions.Where(transaction => transaction.Type == "withdraw").Sum(transaction => transaction.Amount);
-
-        //     return balance;
-        // }
 
         static void Main(string[] args)
         {
-            // load past transactions from a file when it first starts.
 
             var database = new Transaction();
+            // load past transactions from a file when it first starts.
+
             database.LoadTransactionsFromCSV();
 
             Console.WriteLine("");
@@ -70,9 +62,11 @@ namespace FirstBankOfSuncoastNew
 
             while (keepGoing)
             {
+                //menu options
 
-                Console.WriteLine("Do you want Checking, Savings, Balance, Transaction History, or Quit?");
+                Console.WriteLine("Do you want Checking, Savings, Balance, History, or Quit?");
                 var choice = Console.ReadLine().ToLower();
+
                 //QUIT - stops program
                 if (choice == "quit")
                 {
@@ -84,7 +78,7 @@ namespace FirstBankOfSuncoastNew
                     Console.WriteLine("Checking account: Would you like to deposit or withdraw?");
                     var checkingAnswer = Console.ReadLine();
 
-                    //DEPOSIT-
+                    //checking DEPOSIT-
 
                     if (checkingAnswer == "deposit")
                     {
@@ -103,7 +97,8 @@ namespace FirstBankOfSuncoastNew
 
                         else
                         {
-                            //Add to list
+                            //add to list
+
                             transactions.Add(transaction);
                             Console.WriteLine("");
                             Console.WriteLine($"You've added {transaction.Amount} into your checking account.");
@@ -116,10 +111,9 @@ namespace FirstBankOfSuncoastNew
                         }
 
                     }
-                    //WITHDRAW-
+                    //checking WITHDRAW-
                     if (checkingAnswer == "withdraw")
                     {
-                        // var transaction = new Transaction();
                         Console.WriteLine("How much would you like to withdraw from checking?");
 
                         var withdrawChoice = int.Parse(Console.ReadLine());
@@ -166,7 +160,7 @@ namespace FirstBankOfSuncoastNew
                 {
                     Console.WriteLine("Savings account: Would you like to deposit or withdraw?");
                     var savingsAnswer = Console.ReadLine();
-                    //DEPOSIT-
+                    //savingsDEPOSIT-
                     if (savingsAnswer == "deposit")
                     {
 
@@ -196,9 +190,11 @@ namespace FirstBankOfSuncoastNew
 
                     }
 
-                    //WITHDRAW--
+                    //savingsWITHDRAW--
                     if (savingsAnswer == "withdraw")
                     {
+                        Console.WriteLine("How much would you like to withdraw from savings?");
+
                         var withdrawSavingsChoice = int.Parse(Console.ReadLine());
 
                         //filter out checking acct
@@ -263,7 +259,7 @@ namespace FirstBankOfSuncoastNew
                     Console.WriteLine("");
 
                 }
-                else if (choice == "transaction history")
+                else if (choice == "history")
                 {
                     foreach (var transaction in transactions)
                     {
